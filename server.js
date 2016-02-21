@@ -11,26 +11,33 @@ conn.get('/todos',function(req,res){
 });	
 conn.post('/todos',function(req,res){
 	var bd = req.body;
+	var picked = _.pick(bd,'description','completed');
+	//consolelog(!_.isBoolean(bd.completed)+'  '+)
+	if(!_.isBoolean(bd.completed) || !_.isString(bd.description))
+	{
+		return res.status(404).send();
+	}
 	bd.id=idi;
 	idi=idi+1;
-	todos.push(bd);
+	todos.push(picked);
 	console.log('in post'+JSON.stringify(todos));
 	res.json(bd);
 });
 conn.get('/todos/:id',function(req,res){
+	//colsole.log("in id get request")
 	var rid=parseInt(req.params.id);
-	var out;
+	var out=_.findWhere(todos,{id:rid});
 	//console.log('wtf');
 	//('the id is'+req.params.id);
-	todos.forEach(function(to){
+	//todos.forEach(function(to){
 		//console.log('in 4each loop '+rid+'=='+to.id);
-		if(to.id === rid)
-		{
+		//if(to.id === rid)
+		//{
 			//console.log('in loop');
-			out=to;
-		}
+			//out=to;
+		//}
 		
-	});
+	//);
 	res.json(out);
 });
 conn.get('/',function(req,res){
