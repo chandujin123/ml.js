@@ -61,6 +61,36 @@ conn.get('/todos/:id',function(req,res){
 conn.get('/',function(req,res){
 	res.send('TO DO API ROOT');
 });
+conn.put('/todos/:id',function(req,res){
+	var rid=parseInt(req.params.id);
+	var out=_.findWhere(todos,{id:rid});
+	var bd = req.body;
+	var va = {};
+	if(!out)
+	{
+		return res.send(404);
+	}
+	//console.log(bd.hasOwnProperty('completed') +'-----'+ _.isBoolean(bd.completed));
+		if(bd.hasOwnProperty('completed') && _.isBoolean(bd.completed))
+		{
+			va.completed=bd.completed;
+		}
+		else if(bd.hasOwnProperty('completed'))
+		{
+			return res.status(400).send();
+		}
+		if(bd.hasOwnProperty('description') && _.isString(bd.completed) )
+		{
+			va.description=bd.description;
+		}
+			else if(bd.hasOwnProperty('description'))
+		{
+			return res.status(400).send();
+		}
+		_.extend(out,va);
+		res.json(out);
+		 
+});
 
 conn.listen(port,function(){
 		console.log('listningt to 3000  '+port);
